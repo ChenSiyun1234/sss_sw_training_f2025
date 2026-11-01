@@ -20,13 +20,18 @@ int main(void)
 {
 	setup_training();
 
-	int count = 0;
+	rcc_enable(GPIO_C_ENABLE);
+	/* The Blue Pill LED is active-low. Preload high so it starts off. */
+	gpio_high(LED_PORT, LED_PIN);
+	gpio_configureMode(LED_PORT, LED_PIN, GPIO_OUTPUT_PUSH_PULL, GPIO_LOW_SPEED);
+	GPIO_VALUE led = GPIO_HIGH;
 
 	/* Infinite loop */
 	while (1)
 	{
 	  HAL_Delay(1000);
-	  printMsg("Hello #%d\r\n", count++);
+	  led = (led == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
+	  gpio_set(LED_PORT, LED_PIN, led);
 	}
 }
 
